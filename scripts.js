@@ -1,85 +1,96 @@
-let prevButton = document.getElementById('prev');
-let nextButton = document.getElementById('next');
-let container = document.querySelector('.container');
-let item = container.querySelectorAll('.list .item');
-let indicators = document.querySelector('.indicators');
-let dots = indicators.querySelectorAll("ul li");
-let list = container.querySelector('.list');
+// Elementos da Interface
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+const container = document.querySelector('.container');
+const items = container.querySelectorAll('.list .item');
+const indicators = document.querySelector('.indicators');
+const dots = indicators.querySelectorAll('ul li');
+const list = container.querySelector('.list');
+const numberIndicator = indicators.querySelector('.number');
+
+const menuToggle = document.getElementById('menuToggle');
+const navMenu = document.getElementById('navMenu');
+
+if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('open');
+    });
+}
+
+document.getElementById('botaohome')?.addEventListener('click', () => {
+    alert('Você clicou no botão Home! 🎉');
+    navMenu?.classList.remove('open');
+});
+
+document.getElementById('botaocarros')?.addEventListener('click', () => {
+    alert('Você clicou no botão Carros! 🚗');
+    navMenu?.classList.remove('open');
+});
+
+document.getElementById('botaocontato')?.addEventListener('click', () => {
+    alert('Área de contato em desenvolvimento 🚧');
+    navMenu?.classList.remove('open');
+});
+
 
 let active = 0;
-let firstPosition = 0;
-let lastPosition = item.length - 1;
+const firstPosition = 0;
+const lastPosition = items.length - 1;
 
-const botao = document.getElementById('botaohome');
-    botao.addEventListener('click', function () {alert('Você clicou no botão Home! 🎉');
-});
+function updateSlider() {
+    //removi o active dos elementos que estavam ativos ZEMATECH
+    container.querySelector('.list .item.active')?.classList.remove('active');
+    indicators.querySelector('ul li.active')?.classList.remove('active');
 
-const botao2 = document.getElementById('botaocarros');
-botao2.addEventListener('click', function () {alert('Você clicou no botão Carros! 🚗');
-});
+    // Ativa os elementos da posição atual
+    items[active].classList.add('active');
+    dots[active].classList.add('active');
+    
+    // Atualiza a numeração (01, 02, etc.)
+    numberIndicator.innerText = String(active + 1).padStart(2, '0');
+}
 
-const botao3 = document.getElementById('botaocontato');
-botao3.addEventListener('click', function () {alert('Área de contato em desenvolvimento 🚧');
-});
+nextButton.onclick = () => {
+    list.style.setProperty('--calculation', '1');
+    active = active + 1 > lastPosition ? 0 : active + 1;
+    updateSlider();
+};
 
-    function setSlaider() {
-        let itemOld = container.querySelector('.list .item.active');
-        itemOld.classList.remove('active');
+prevButton.onclick = () => {
+    list.style.setProperty('--calculation', '-1');
+    active = active - 1 < firstPosition ? lastPosition : active - 1;
+    updateSlider();
+};
 
-        let dotOld = indicators.querySelector('ul li.active');
-        dotOld.classList.remove('active');
-
-        dots[active].classList.add('active');
-        indicators.querySelector('.number').innerHTML = '0' + (active + 1);
-    }
-
-    nextButton.onclick = () => {
-        list.style.setProperty('--calculation', '1');
-        active = active + 1 > lastPosition ? 0 : active + 1;
-        setSlaider();
-        item[active].classList.add('active');
-    }
-
-    prevButton.onclick = () => {
-        list.style.setProperty('--calculation', '-1');
-        active = active - 1 < firstPosition ? lastPosition : active - 1;
-        setSlaider();
-        item[active].classList.add('active');
-    }
-
-
-/*animation scroll*/
+// Animações com GSAP e ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
-gsap.to(".divcar", {
-    x: "-100vw",
-
+gsap.to('.divcar', {
+    x: '-100vw',
     scrollTrigger: {
-        trigger: ".nova-secao",
-        start: "top top",
-        end: "bottom top",
+        trigger: '.nova-secao',
+        start: 'top top',
+        end: 'bottom top',
         scrub: 1,
-}
-});
-
-gsap.to(".nova-secao h1", {
-    y: -200,
-
-    scrollTrigger: {
-        trigger: ".nova-secao",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1
     }
 });
 
-gsap.to(".nova-secao p", {
-    y: 200,
-
+gsap.to('.nova-secao h1', {
+    y: -100,
     scrollTrigger: {
-        trigger: ".nova-secao",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1
+        trigger: '.nova-secao',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+    }
+});
+
+gsap.to('.nova-secao p', {
+    y: 100,
+    scrollTrigger: {
+        trigger: '.nova-secao',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
     }
 });
